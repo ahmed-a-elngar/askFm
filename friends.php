@@ -1,9 +1,12 @@
 <?php
 session_start();
 
+$_SESSION['active_tab'] = 'friends';
+
 $pageTitle = "Friends";
 include('init.php');
 
+unset($_SESSION['active_tab']);
 #if user is loged in
 loged('friends');
 

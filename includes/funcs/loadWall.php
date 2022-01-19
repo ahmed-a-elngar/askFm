@@ -22,15 +22,15 @@
         if (count($f_id_arr) > 0) {     // if user has friends
             
             $a_table_name = $f_id_arr[0] . '_answers';
-            $select_a_stmt = "SELECT  $a_table_name.* , users.user_id, users.user_name, users.user_full_name, users.user_pic FROM $a_table_name
+            $select_a_stmt = "SELECT  $a_table_name.* , users.user_id, users.user_name, users.user_full_name, users.user_pic, users.user_mood FROM $a_table_name
                               LEFT JOIN users ON users.user_id = '$f_id_arr[0]' ";
 
             for($i = 1; $i < count($f_id_arr) ; $i++)
             {
                 // get all friends answers
                 $a_table_name = $f_id_arr[$i] . '_answers';
-                $select_a_stmt .= "UNION SELECT $a_table_name.* , users.user_id, users.user_name, users.user_full_name, users.user_pic FROM $a_table_name
-                                   LEFT JOIN users ON users.user_id = '$f_id_arr[$i]' ";
+                $select_a_stmt .= "UNION SELECT $a_table_name.* , users.user_id, users.user_name, users.user_full_name, users.user_pic , users.user_mood
+                FROM $a_table_name LEFT JOIN users ON users.user_id = '$f_id_arr[$i]' ";
 
             }
 
@@ -62,17 +62,27 @@
                         # code...
                         echo '
                                             <a href="profile.php?user_name_='.$sender_user_name.'" class="asked_details">
-                                            <img src="' . $sender_info["user_pic"] . '" '. $img_float .' alt="" >
-                                            <span>' . $sender_info["user_full_name"] . '</span>
-                                            </a>';
+                                            <img src="' . $sender_info["user_pic"] . '" '. $img_float .' alt="" >';                                            
+                                 
+                    echo'
+                        <span>' . $sender_info["user_full_name"] . '</span>
+                        </a>';
                     }
                     echo '
                                     </div>
                                     <div class="answer_receiver">
                                         <div class="friend_pics">
                                             <a href="profile.php?user_name_='.$answer_info["user_name"].'">
-                                                <img src="'.$answer_info["user_pic"].'">
-                                            </a>
+                                                <img src="'.$answer_info["user_pic"].'">';
+                    if($answer_info['user_mood'] != null and $answer_info['user_mood'] != 0)
+                    {
+                        echo'
+                            <div class="user_mood">
+                                <img src="pics/moods/'.$answer_info['user_mood'].'.gif">
+                            </div>
+                        ';
+                    }       
+                    echo'                      </a>
                                         </div>
                                         <div >
                                             <a href="profile.php?user_name_='.$answer_info["user_name"].'">
@@ -85,10 +95,19 @@
                                     </div>
                                     <!--the answer content-->
                                     <div class="answer_content" dir="'. detectDir($answer_info["a_content"]).'">
-                                    ' . $answer_info["a_content"] . '
+                                    ' . $answer_info["a_content"] 
+                        ;
+ 
+                    if ($answer_info["a_pic"] != null) {
+                                    echo '
+                                        <img src="'.$answer_info['a_pic'].'">
+                                    ';
+                    }
+                    echo'
                                     </div>
                                     <!--interactions with the answer (like, reward, share, ...)-->
-                                    <div class="iteractions_section">';
+                                    <div class="iteractions_section">
+                    ';
                     if (interacted($_SESSION['user_id'], $a_table_name, $answer_info['a_id'], "likes")) {
                         echo '
                                                 <button class="heart" title="Like" onclick="likeMe('.$answer_info["user_id"].',' . $answer_info["a_id"] . ')" value="' . $answer_info["user_id"].',' . $answer_info["a_id"] . '">

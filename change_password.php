@@ -1,6 +1,9 @@
 <?php
     session_start();
 
+    $_SESSION['active_tab'] = 'change password';
+
+
     $pageTitle = "Settings | Change Password";
     include('init.php');
 
@@ -44,7 +47,20 @@
                 <div class="inp_sec">
                     <p>Current Password</p>
                     <div>
-                        <input type="text" id="u_old_pass" name="old_pass" maxlength="30" size="30" autocomplete="off">
+                        <?php
+                            if (isset($_SESSION['reset_pass'])) {
+                                echo'
+                                    <input type="text" id="u_old_pass" value="'.$user_info['user_name'].'" name="old_pass" maxlength="30" size="30" autocomplete="off">
+                                ';
+                                unset($_SESSION['reset_pass']);
+                            }
+                            else
+                            {
+                                echo'
+                                    <input type="text" id="u_old_pass" name="old_pass" maxlength="30" size="30" autocomplete="off">
+                                ';
+                            }
+                        ?>
                     </div>
                 </div>
                 <div class="inp_sec">
@@ -109,7 +125,7 @@
             $('#Account #u_new_pass_1').attr('placeholder', 'please complete me');
             $('#Account #u_new_pass_1').css('border', '1px solid #e14');
         }
-        if (pass.trim() != rep_pass.trim()) {
+        if (pass.trim() != rep_pass.trim() && (pass.length != 0)) {
             $(this).css('border', '1px solid #e14');
             $('#Account .warning').text('repeated password is incorrect');
         }
@@ -135,7 +151,7 @@
             $('#Account #u_new_pass_2').attr('placeholder', 'please complete me');
             $('#Account #u_new_pass_2').css('border', '1px solid #e14');
         }
-        if (pass.trim() != rep_pass.trim()) {
+        if (pass.trim() != rep_pass.trim() && (rep_pass.length != 0)) {
             $('#Account #u_new_pass_2').css('border', '#e14');
             $('#Account .warning').text('repeated password is incorrect');
         }

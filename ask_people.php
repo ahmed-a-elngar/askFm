@@ -1,5 +1,8 @@
 <?php
 session_start();
+
+$_SESSION['active_tab'] = 'ask people';
+
 if (!isset($_SESSION['user_name'])) {
     # code...
     header('location: sign in.php');

@@ -1,9 +1,12 @@
 <?php
     session_start();
 
+    $_SESSION['active_tab'] = 'questions';
+
     $pageTitle = "Questions";
     include('init.php');
 
+    unset($_SESSION['active_tab']);
     #if user is loged in
     loged('questions');
 
@@ -67,7 +70,7 @@
                                 </div>
                                 <div style="display:inline-block;">
                                     <a href="profile.php?user_name_='.$q_sender.'" class="question_asked_name">'. "$get_sender_details[0]" .'</a>
-                                    <a href="question_answer.php?q_id_='.$ques['q_id'].'#" class="question_content" dir="rtl">'."$q_content".'</a>
+                                    <a href="question_answer.php?q_id_='.$ques['q_id'].'#" class="question_content" dir="'. detectDir($ques["q_content"]).'">'."$q_content".'</a>
                                     <div class="time_container">
                                         <a href="#"> '
                                             .  printTime($q_date) .
@@ -83,7 +86,7 @@
                                                 Report question
                                             </a>
                                             <a id="block_q_u_btn" value="'.$ques['q_id'].'">
-                                                <i class="fa fa-flag"></i>
+                                                <i class="fas fa-ban"></i>
                                                 Block user
                                             </a>
                                         </div>
@@ -108,8 +111,8 @@
                                     </a>
                                 </div>
                                 <div style="display:inline-block; margin-top:18px;">
-                                    <a href="question_answer.php?q_id_='.$ques['q_id'].'#" class="question_content" dir="rtl">'."$q_content".'</a>
-                                    <div class="time_container">
+                                <a href="question_answer.php?q_id_='.$ques['q_id'].'#" class="question_content" dir="'. detectDir($ques["q_content"]).'">'."$q_content".'</a>
+                                <div class="time_container">
                                         <a href="#"> '
                                             .  printTime($q_date) .
                                         ' </a>
@@ -124,7 +127,7 @@
                                                 Report question
                                             </a>
                                             <a id="block_q_u_btn" value="'.$ques['q_id'].'">
-                                                <i class="fa fa-flag"></i>
+                                                <i class="fas fa-ban"></i>
                                                 Block user
                                             </a>
                                         </div>
@@ -144,7 +147,7 @@
                                 </div>
                                 <div style="display:inline-block;">
                                     <a href="profile.php?user_name_='.$q_sender.'" class="question_asked_name">'. "$get_sender_details[0]" .'</a>
-                                    <a href="question_answer.php?q_id_='.$ques['q_id'].'#" class="question_content" dir="rtl">'."$q_content".'</a>
+                                    <a href="question_answer.php?q_id_='.$ques['q_id'].'#" class="question_content" dir="'. detectDir($ques["q_content"]).'">'."$q_content".'</a>
                                     <div class="time_container">
                                         <a href="#"> shoutout | '
                                             .  printTime($q_date) .
@@ -160,7 +163,7 @@
                                                 Report question
                                             </a>
                                             <a id="block_q_u_btn" value="'.$ques['q_id'].'">
-                                                <i class="fa fa-flag"></i>
+                                                <i class="fas fa-ban"></i>
                                                 Block user
                                             </a>
                                         </div>
@@ -178,8 +181,8 @@
                                     </a>
                                 </div>
                                 <div style="display:inline-block; margin-top:18px;">
-                                    <a href="question_answer.php?q_id_='.$ques['q_id'].'#" class="question_content" dir="rtl">'."$q_content".'</a>
-                                    <div class="time_container">
+                                <a href="question_answer.php?q_id_='.$ques['q_id'].'#" class="question_content" dir="'. detectDir($ques["q_content"]).'">'."$q_content".'</a>
+                                <div class="time_container">
                                         <a href="#"> shoutout | '
                                             .  printTime($q_date) .
                                         ' </a>
@@ -194,7 +197,7 @@
                                                 Report question
                                             </a>
                                             <a id="block_q_u_btn" value="'.$ques['q_id'].'">
-                                                <i class="fa fa-flag"></i>
+                                                <i class="fas fa-ban"></i>
                                                 Block user
                                             </a>
                                         </div>

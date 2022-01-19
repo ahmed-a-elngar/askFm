@@ -1,9 +1,12 @@
 <?php
     session_start();
 
+    $_SESSION['active_tab'] = 'settings';
+
     $pageTitle = "Settings";
     include('init.php');
 
+    unset($_SESSION['active_tab']);
     #if user is loged in
     loged('settings');
 
@@ -55,7 +58,7 @@
         $permission_5 = isset($_POST['ch5'])? "1" : "0";
         $permissions = $permission_1 . "," . $permission_2 . "," . $permission_3 . "," . $permission_4;
         $user_mood = htmlentities(mysqli_real_escape_string($con, $_POST['user_mood']));
-
+        
         $uploading_pic_result = move_uploaded_file($pic_tempname, $pic_path);
         $uploading_bg_result = move_uploaded_file($bg_tempname, $bg_path);
         if ($uploading_pic_result | (!$uploading_pic_result)) {
@@ -83,8 +86,9 @@
                     $update_query = "UPDATE users SET user_full_name = '$user_full_name', user_DB = '$db', user_pic = '$pic_path', user_mood = '$user_mood', user_bio = '$user_bio',
                                      user_location = '$user_location', user_web = '$user_web', user_interests='$user_inerests', user_permissions = '$permissions', user_status = '$permission_5'
                                      WHERE user_id = '$user_id'";
-    
+
                     if (mysqli_query($con, $update_query)) {
+                        $_SESSION['user_pic'] = $pic_path;
                         header('location: profile.php');
                     }
                     else
@@ -119,6 +123,7 @@
                                 WHERE user_id = '$user_id'";
 
                 if (mysqli_query($con, $update_query)) {
+                    $_SESSION['user_pic'] = $pic_path;
                     header('location: profile.php');
                 }
                 else
@@ -365,12 +370,12 @@
                         </div>
                     </div>
                     <!--change profile photo-->
-                    <div style="padding:15px 0px 5px ">
+                    <div style="padding:15px 0px 5px; overflow:hidden;">
                         <h3 style="font-size: 12px; color:#2b3237; font-weight:bold;">photo</h3>
                         <div id="pic_output" style="background-image: url(<?php echo $user_info['user_pic'];?>); border-radius: 50%; background-position: 50% 50%; background-size: cover; 
                             display: inline-block; height: 45px; margin: 10px 10px 10px 0; position: relative; vertical-align: middle; width: 45px;">
                         </div>
-                        <input name="user_pic" type="file" style="visibility: hidden;" class="file_input photo" accept="image/*" onchange='document.getElementById("pic_output").style.backgroundImage = "url("+window.URL.createObjectURL(this.files[0])+")"'>
+                        <input name="user_pic" type="file" style="visibility: hidden;margin-top:20px;" class="file_input photo" accept="image/*" onchange='document.getElementById("pic_output").style.backgroundImage = "url("+window.URL.createObjectURL(this.files[0])+")"'>
                     </div>
                     <!--change background-->
                     <div style="padding:15px 0px 5px; border-top: solid 1px #d5d5dd;">
@@ -378,7 +383,7 @@
                         <div id="bg_output" style="background-image: url(<?php echo $user_info['user_bg'];?>); border-radius: 50%; background-position: 50% 50%; background-size: cover; 
                             display: inline-block; height: 45px; margin: 10px 10px 10px 0; position: relative; vertical-align: middle; width: 45px;">
                         </div>
-                        <input name="user_bg" type="file" style="visibility: hidden;" class="file_input background" accept="image/*" onchange='document.getElementById("bg_output").style.backgroundImage = "url("+window.URL.createObjectURL(this.files[0])+")"'>
+                        <input name="user_bg" type="file" style="visibility: hidden;margin-top:20px;" class="file_input background" accept="image/*" onchange='document.getElementById("bg_output").style.backgroundImage = "url("+window.URL.createObjectURL(this.files[0])+")"'>
                     </div>
                     <!--set mood-->
                     <div style="padding:15px 0px 5px ; border-top: solid 1px #d5d5dd; overflow: hidden;">

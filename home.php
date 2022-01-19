@@ -1,9 +1,12 @@
 <?php
 
 session_start();
+$_SESSION['active_tab'] = 'home';
 
 $pageTitle = 'ASK fm | Home';
 include('init.php');
+
+unset($_SESSION['active_tab']);
 
 #if user is loged in
 loged('home');
@@ -28,7 +31,7 @@ loged('home');
 		<i class="fa fa-heart"></i>
                 <h2 class="side_heading grey">Versus</h2>
             </div>
-            <form action="" class="question_form">
+            <form class="question_form">
                 <textarea placeholder="What, when, why… ask" class="question_txtArea"></textarea>
                 <div class="anonymously_box">
                     <label class="switch">
@@ -233,7 +236,7 @@ loged('home');
 
     });
 
-        // versus 
+    // versus 
     $(document).on("click", "#Versus [title='Like']", function(){
 
         r_u_id = <?php echo $_SESSION["user_id"]; ?>;
@@ -253,7 +256,6 @@ loged('home');
 
     // view versus users
     $(document).on("click", "#Versus [title='Like']", function(){
-
         u_id_v_id_choice = $(this).val();
         u_id = u_id_v_id_choice.split(",")[0];
         table_name = u_id_v_id_choice.split(",")[0] + '_versus';
@@ -280,6 +282,7 @@ loged('home');
     $(document).on('click', '#close_sug', function(){
         $(this).parentsUntil('#Wall').remove();
     });
+
 </script>
 
 <script src="js/functions.js"></script>

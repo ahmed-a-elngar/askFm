@@ -33,15 +33,15 @@
                     <span class="user_name">'.$users['user_full_name'].'</span>
                     <div class="likes_count">
                         <i class="fa fa-heart"></i>
-                        <span>'.$users['user_l_count'].'</span>
+                        <span>'.number_format($users['user_l_count'], 0, '.', ' ').'</span>
                     </div>
                 </div>
                 <div class="coins_info">
                     <div>
                         <img src="pics/icons/coin.png" alt="">
-                        <span>+'.$users['user_weekly_c_count'].'</span>
+                        <span>+'.number_format($users['user_weekly_c_count'], 0, '.', ' ').'</span>
                     </div>
-                    <p>+'.$users['user_today_c_count'].' today</p>
+                    <p>+'.number_format($users['user_today_c_count'], 0, '.', ' ').' today</p>
                 </div>
             </a>';
             $rank += 1;
@@ -64,7 +64,7 @@
                 <div>
                     <p>In your wallet:</p>
                     <p class="coins_count">
-                        <span><?Php echo $_SESSION["user_c_count"];?></span>
+                        <span><?Php echo number_format($_SESSION["user_c_count"], 0, '.', ' ') ;?></span>
                         coins
                     </p>
                 </div>

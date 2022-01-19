@@ -30,7 +30,7 @@ a{
     list-style-type: none;
     float: right;
     position: relative;;
-    margin-top: 6px;
+    margin-top: 4px;
 }
 .top_menu li{
     display: inline;
@@ -39,6 +39,16 @@ a{
 .top_menu li img{
     padding: 0;
     height: 18px;
+}
+.top_menu ul li i{
+    color: #b2b2bb;
+    font-size: 18px;
+}
+.top_menu ul li i:hover{
+    color: #e14;
+}
+.top_menu ul li.active i{
+    color: #e14;
 }
 .top_menu a.add{
     border: none;
@@ -770,15 +780,16 @@ body>.backgroundWrap .gradient {
     position:relative;
     border-radius: 50%;
 }
-.profile_head .profile_pic::before{
-    content: "";
-    /*background-image: url('../pics/icons/mood.png');*/
-    background-size: 32px 32px;
-    width: 32px;
-    height: 32px;
-    bottom: -10px;
-    right: -10px;
+.profile_head .user_mood{
+    display: inline-block;
     position: absolute;
+    margin-left: -70px;
+    overflow: hidden;
+    margin-top: 55px;
+}
+.profile_head .user_mood img{
+    width: 48px;
+    height: 48px;
 }
 .profile_head .profile_user_name{
     color: #fff;
@@ -1020,6 +1031,12 @@ body>.backgroundWrap .gradient {
     font-size: 16px;
     color:#4A4A50;
     line-height: 22px;
+}
+.answer_box .answer_content img{
+    width: 460px;
+    border-radius: 6px;
+    margin-top: 8px;
+    max-height: 460px;
 }
 .answer_box .iteractions_section{
     margin-top: 15px;
@@ -1975,6 +1992,9 @@ a.active{
 #intro_footer ul{
     list-style-type: none;
 }
+#intro_main section img:hover, #intro_footer section img{
+    cursor: pointer;
+}
 /* change password settings */
 #Account{
     width: 460px;
@@ -2212,4 +2232,118 @@ form#form div.permissions_cont div input{
 button[type=submit]:hover{
     cursor: pointer;
     background-color: #d40e3c;
+}
+#answer_pic{
+    visibility: hidden;
+    margin-top: 9px;
+    position: absolute;
+    margin-left: -37px;
+    width: 36px;
+}
+#answer_pic::before{
+    content: '';
+    height: 36px;
+    width: 36px;
+}
+#pic_output{
+    display: none;
+    height: 36px;
+    width: 36px;
+    margin-top: 10px;
+    float: left;
+    margin-left: 10px;
+    background-size: cover;
+}
+#pic_output #cancel_pic{
+    color: #fff;
+    background-color: #131619;
+    border-radius: 50%;
+    float: right;
+    padding: 1px 3px;
+}
+#pic_output #cancel_pic:hover{
+    cursor: pointer;
+}
+i.fa-hand-peace{
+    color:yellow;
+}
+i.fa-question{
+    color: orangered;
+}
+.friend_pics .user_mood{
+    position: absolute;
+    margin-top: -16px;
+    margin-left: 18px;
+}
+.friend_pics .user_mood img{
+    height: 24px;
+    width: 24px;
+}
+.friend_section.big .user_mood
+{
+    margin-top: 18px;
+    margin-left: -18px;
+}
+.overlay_cont{
+    width: 100%;
+    height: 650px;
+    background-color: #000000c2;
+    margin-top: -70px;
+    z-index: 1031;
+    position: fixed;
+    display: none;
+}
+.overlay_cont .photo_cont{
+    background-color: #fff;
+    width: 300px; 
+    margin:auto; 
+    margin-top: 200px; 
+    border-radius: 8px; 
+    padding:30px 0px; 
+    text-align:center;
+}
+.overlay_cont .photo_cont #photo_output{
+    border-radius: 50%; 
+    background-position: 50% 50%; 
+    background-size: cover; 
+    height: 45px; 
+    vertical-align: middle; 
+    width: 45px;
+    margin: auto;
+}
+.overlay_cont .photo_cont input[type=file]{
+    visibility: hidden;
+    display: block;
+    margin: auto;
+}
+.overlay_cont .photo_cont input.user_pic::before{
+    content: 'upload your profile picture';
+    margin: 20px 45px;
+}
+.overlay_cont .photo_cont input[type=button]{
+    background-color: #e14;
+    color: #fff;
+    cursor: pointer;
+    font-size: 13px;
+    padding: 5px 20px;
+    text-align: center;
+    box-sizing: border-box;
+    max-width: 140px;
+    line-height: 18px;
+    position: relative;
+    border: 1px solid transparent;
+    border-radius: 7px;
+    height: 38px;
+}
+.overlay_cont .photo_cont input[value=Cancel]{
+    border: 1px solid;
+    color: #131619;
+    background-color: #fff;
+}
+.overlay_cont .photo_cont input[type=button]:hover{
+    background-color: #d40e3c;
+}
+.overlay_cont .photo_cont input[value=Cancel]:hover{
+    background-color: #131619;
+    color: #fff;
 }

@@ -95,3 +95,8 @@ $(document).on('keyup input', '#u_full_name', function(){
         else
         $('#u_full_name').css('border', 'none');
 });
+
+// cancel 
+$(document).on('click', 'input[value="Cancel"]', function() {
+    window.location.href = "profile.php?";
+});

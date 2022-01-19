@@ -1,6 +1,8 @@
 <?php
 
     session_start();
+	
+    include 'connection.php';
 
     $noNav = '';
     $pageTitle = 'ASK fm';
@@ -29,19 +31,24 @@
     <div id="intro_footer">
         <section>
             <?php // select most 18 
-                $select = "SELECT COUNT(user_id), MIN(user_id) AS minimum, MAX(user_id) AS users_count FROM users";
+            
+                $select = "SELECT COUNT(user_id) As users_count, MIN(user_id) AS minimum, MAX(user_id) AS maximum FROM users";
                 $query = mysqli_query($con, $select);
-                $users_count = mysqli_fetch_array($query)['users_count'];
-                $minimum_id = mysqli_fetch_array($query)['minimum'];
-                $maximum_id = mysqli_fetch_array($query)['maximum'];
+                $select_res = mysqli_fetch_array($query);
+                $users_count = $select_res['users_count'];
+                $minimum_id = $select_res['minimum'];
+                $maximum_id = $select_res['maximum'];
 
                 if ($users_count > 18) {
                     # random
 
                     $f_count = 0;
                     $id_arr = array();
+                    $timer = 1;
+
                     while ($f_count < 18) {
                         $id = rand($minimum_id, $maximum_id);
+                        $timer += 1;
                         if (idExists($id)) {
                                 $choosen = false;
                                 foreach($id_arr as $id_)
@@ -55,21 +62,24 @@
                                     $f_count += 1;
                                 } 
                         }
+                        if ($timer == 1000) {
+                            break;
+                        }
                     }
                     
                     $in_condition = '( ' . $id_arr[0];
                     for ($i= 1; $i < count($id_arr); $i++) { 
                         $in_condition .= ' , ';
-                        $in_condition .= $id_arr[$id_arr];
+                        $in_condition .= $id_arr[$i];
                     }
                     $in_condition .= ' )';
-
                     $select_users = "SELECT user_name, user_full_name, user_pic FROM users WHERE user_id IN $in_condition";
                     $users_query = mysqli_query($con, $select_users);
-
                     while ($users_info = mysqli_fetch_array($users_query)) {
                         echo'
-                            <img src="'.$users_info['user_pic'].'" alt="'.$users_info['user_full_name'].'">
+                            <a href="profile.php?user_name_='.$users_info['user_name'].'">
+                                <img src="'.$users_info['user_pic'].'" alt="'.$users_info['user_full_name'].'" title="'.$users_info['user_full_name'].'">
+                            </a>
                         ';
                     }
                 }
@@ -86,6 +96,7 @@
                         ';
                     }
                 }
+                
             ?>
         </section>
 
@@ -99,16 +110,16 @@
         <a href="">Advertising </a>
         <a href="">Professionals </a>
 
-        <hr style="width: 60vw; margin:3vh auto; opacity: .6;">
+        <hr style="width: 60vw; margin: 42px auto 24px; opacity: .6;">
         <section style="width: 60vw; margin: auto; padding-bottom: 36px; font-size: 12px;">
-            <p style="float: left;">Language <span style="color: #000;"> English</span></p>
-            <section style="float: right;">
-                <img src="pics/logo.png" style="width: 2vw; padding: 0;">
-                <img src="pics/logo.png" style="width: 2vw; padding: 0;">
-                <img src="pics/logo.png" style="width: 2vw; padding: 0;">
-                <img src="pics/logo.png" style="width: 2vw; padding: 0;">
-                <img src="pics/logo.png" style="width: 2vw; padding: 0;">
-                <p style="margin-top: -18px; margin-left: 18vw;">
+            <p style="float: left; margin-top: 4px;">Language <span style="color: #000;"> English</span></p>
+            <section style="float: right; margin-top: -3px;">
+                <img src="pics/download (1).jpg" style="width: 2vw; padding: 0;">
+                <img src="pics/download (1).jpg" style="width: 2vw; padding: 0;">
+                <img src="pics/download (1).jpg" style="width: 2vw; padding: 0;">
+                <img src="pics/download (1).jpg" style="width: 2vw; padding: 0;">
+                <img src="pics/download (1).jpg" style="width: 2vw; padding: 0;">
+                <p style="margin-top: -24px; margin-left: 18vw;">
                     @ Ask fm 2022
                 </p>
             </section>

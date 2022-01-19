@@ -1,5 +1,8 @@
 <?php
     session_start();
+
+    $_SESSION['active_tab'] = 'ask friends';
+
     if (!isset($_SESSION['user_name'])) {
         # code...
         header('location: sign in.php');
@@ -56,10 +59,10 @@
         <div class="ask_box light">
             <h2 class="side_heading">Ask Friends</h2>
             <form action="<?php echo $_SERVER['PHP_SELF']?>" method="POST" class="question_form ">
-                <textarea name="q_content" id="q_content" placeholder="Ask your friends ..." class="question_txtArea"></textarea>
+                <textarea name="q_content" id="q_content" placeholder="Ask your friends ..." class="question_txtArea"><?php if (isset($_GET['q_content'])) {echo $_GET['q_content'];}?></textarea>
                 <div class="anonymously_box">
                     <label class="switch">
-                        <input name="status" id="status" type="checkbox" checked="TRUE">
+                    <input name="status" id="status" type="checkbox" checked="TRUE">
                         <span class="slider round"></span>
                     </label>
                     <span class="anonymously_switch">Ask anonymously</span>
@@ -123,18 +126,13 @@
 <script src="js/jquery-3.3.1.min.js"></script>
 <script>
     // set q sender status whether private | public
-    $(function(){
-        $('#status').click(function(){
-            val = document.getElementById('status').checked;
-            if(val)
-            {
+    $(document).on('click', '#status', function() {
+            val = document.getElementById('s_status').value;
+            if (val == "private") {
+                document.getElementById('s_status').value = "public";
+            } else {
                 document.getElementById('s_status').value = "private";
             }
-            else{
-                document.getElementById('s_status').value = "public";
-            }
-            console.log(val);
-        });
     });
     // highlight friend if selected & change count
     $(function() {

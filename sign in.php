@@ -2,6 +2,8 @@
 
     session_start();
 
+    $_SESSION['active_tab'] = 'sign in';
+
     $noNav = '';
     $pageTitle = 'Sign in | ASK fm';
     include('init.php');

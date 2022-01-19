@@ -35,14 +35,23 @@ if ($v_info == null or $u_info == null) {
     <!--main section-->
     <div class="main_section transparent">
         <div class="versus_cont">
-            <h1><?php echo $v_info['v_head']; ?></h1>
+            <h1 dir="<?php echo detectDir($v_info['v_head']);?>"><?php echo $v_info['v_head']; ?></h1>
             <?php
             echo
             '<div class="friend_section big" style="border: none;">
                     <div class="friend_pics">
                         <a href="profile.php?user_name_=' . $u_info["user_name"] . '">
-                            <img src="' . $u_info["user_pic"] . '">
-                        </a>
+                            <img src="' . $u_info["user_pic"] . '">';
+            if($u_info['user_mood'] != null and $u_info['user_mood'] != 0)
+            {
+                echo'
+                    <div class="user_mood">
+                        <img src="pics/moods/'.$u_info['user_mood'].'.gif">
+                    </div>
+                ';
+            } 
+            echo'       
+                </a>
                     </div>
                     <div >
                         <a href="profile.php?user_name_=' . $u_info["user_name"] . '">
@@ -53,7 +62,7 @@ if ($v_info == null or $u_info == null) {
                         </a>
                     </div>
                 </div>
-                ';
+            ';
             include 'includes/funcs/load_versus.php';
             ?>
         </div>

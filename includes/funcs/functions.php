@@ -50,7 +50,7 @@
 
         $c_year = getdate()["year"];
         $c_month = getdate()["mon"];
-        $c_day = getdate()["mday"];
+        $c_day = getdate()["mday"] ;
         $a_hours = ((int)preg_split("/:/", $a_time_arr[1])[0]);
         $c_hours = idate("H") + 1;
         $c_min = idate("i");
@@ -135,7 +135,11 @@
                     }
                     else {  // look for hours
 
+                        if ($a_hours == 0) {
+                            $a_hours = 24;
+                        }
                         $total_hours = 24 - (abs($c_hours - $a_hours));
+
                         if ($c_day == $a_day and $c_hours > $a_hours and ($c_hours - $a_hours) > 1) {
                             $more_less = 'about ';
                             $year_s = ' hours ago';
@@ -166,7 +170,7 @@
                             }
                         }
                     }
-                }
+                }    
             }
             return $more_less . $total_years . $year_s;
         }
@@ -273,14 +277,16 @@
 
     function idExists( $id)
     {
-        global $con;
-        $check = "SELECT user_name from users where user_id ='$id'";
-        $check_query = mysqli_query($con, $check);
-        if (strlen(mysqli_fetch_array($check_query)[0]) > 0) {
-
-            return true;
+        if ($id > 0) {
+            global $con;
+            $check = "SELECT user_name from users where user_id ='$id'";
+            $check_query = mysqli_query($con, $check);
+            if (strlen(mysqli_fetch_array($check_query)[0]) > 0) {
+    
+                return true;
+            }
+            return false;
         }
-        return false;
     }
 
     function qSent( $q_content,  $s_user_name, $type,  $s_status,  $r_id)
@@ -297,6 +303,9 @@
         }
 
         if (mysqli_query($con, $insert)) {
+            $select_q_id  = "SELECT MAX(q_id) from $table_name";
+            $q_id = mysqli_fetch_array(mysqli_query($con, $select_q_id))[0];
+            notifyMe("q", $q_id, $r_id);
             return true;
         }
         return false;
@@ -314,7 +323,7 @@
             $select_result = mysqli_fetch_array($select_query);
             $maximum = $select_result["maximum"];
             $minimum = $select_result["minimum"];
-            while ($i <= 3) {
+            while ($i <= 6) {
                 $id = rand($minimum, $maximum);
                 $targetable = true;
                 foreach($targets as $target)
@@ -349,15 +358,30 @@
         }
     }
 
-    function notifyFriends( $id,  $v_id) // when create versus
+    function notifyFollowers( $id,  $v_id) // when create versus
     {
         global $con;
         $f_table_name = $id . '_friends';
-        $selecting = "SELECT f_id FROM $f_table_name";
-        $selecting_q = mysqli_query($con, $selecting);
-        while ($frnd = mysqli_fetch_array($selecting_q)) {
-            # code...
-            $f_id = $frnd[0];
+        // select all users id
+        $select_u_stmt = "SELECT user_id From users WHERE user_id != '$id'";
+        $select_u_q = mysqli_query($con, $select_u_stmt);
+        
+        $select_f_stmt = "";
+        while($select_users_id = mysqli_fetch_array($select_u_q))
+        {
+            if ($select_f_stmt != "") {
+                $select_f_stmt .= " UNION ";
+            }
+            $f_id = $select_users_id['user_id'];
+            $f_f_table_name = $f_id . '_friends';
+            $select_f_stmt .= "SELECT " . $f_f_table_name . ".f_id, users.user_id FROM $f_f_table_name 
+                                LEFT JOIN users ON users.user_id = '$f_id' WHERE f_id = '$id'";
+        }
+        // notify followers
+        $select_f_q = mysqli_query($con, $select_f_stmt);
+        while($follower = mysqli_fetch_array($select_f_q))
+        {
+            $f_id = $follower['user_id'];
             $n_table_name = $f_id . '_notifications';
             $n_info = $v_id . ',' . $id . '_versus';
             $inserting = "INSERT INTO $n_table_name (n_info) VALUES('$n_info')";
@@ -381,6 +405,7 @@
 
     function notifyMe( $n_type,  $target_n_id,  $target_user_id,  $r_id = null) // when receive q | get like
     {
+
         global $con;
         $n_table_name = $target_user_id . '_notifications';
         if($n_type == "q")
@@ -440,7 +465,8 @@
                     c_users varchar(255),   #user_1, user_2
                     q_type VARCHAR(2) DEFAULT 'q',
                     q_status VARCHAR(8) DEFAULT 'public',
-                    a_date TIMESTAMP DEFAULT current_timestamp()                   
+                    a_date TIMESTAMP DEFAULT current_timestamp(),
+                    a_pic VARCHAR(255)
                 )";
         $a_table_query = mysqli_query($con, $a_table_s);
         #friends table
@@ -452,7 +478,7 @@
         #Notifications table
         $n_table_s = "CREATE TABLE $n_table_name(
                     n_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    n_info VARCHAR(100),   #(n_type, n_id, u_id)
+                    n_info VARCHAR(100) NOT NULL,
                     read_or_not TINYINT(1) DEFAULT '0',
                     n_date TIMESTAMP DEFAULT current_timestamp()                   
                 )";
@@ -460,7 +486,7 @@
         #Blocks table
         $b_table_s = "CREATE TABLE $b_table_name(
                     b_id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-                    b_info VARCHAR(100) NOT NULL  #(b_type, b_id, u_id)
+                    b_info VARCHAR(100) NOT NULL
                 )";
         $b_table_query = mysqli_query($con, $b_table_s);
         #Versus table
@@ -470,9 +496,9 @@
                     v_pic_1 VARCHAR(255) NOT NULL,
                     v_pic_2 VARCHAR(255) NOT NULL,
                     v_l1_sum INT(11) DEFAULT '0',
-                    v_l1_users varchar(255),   #user_1, user_2
+                    v_l1_users varchar(500),  
                     v_l2_sum INT(11) DEFAULT '0',
-                    v_l2_users varchar(255),   #user_1, user_2
+                    v_l2_users varchar(500),  
                     v_date TIMESTAMP DEFAULT current_timestamp() 
                 )";
         $v_table_query = mysqli_query($con, $v_table_s);
@@ -506,14 +532,17 @@
     function detectDir($word)
     {
         $dir = "rtl";
-        if ( (ord($word[0]) > 49 and ord($word[0]) < 57) or (ord($word[0]) > 65 and ord($word[0]) < 90) or (ord($word[0]) > 97 and ord($word[0]) < 122)) {
-            $dir = "ltr";
-        }
-        if (strlen($word) > 1) {
-            if ( (ord($word[1]) > 49 and ord($word[1]) < 57) or (ord($word[1]) > 65 and ord($word[1]) < 90) or (ord($word[1]) > 97 and ord($word[1]) < 122)) {
+        if (trim($word) != "") {
+            if ( (ord($word[0]) > 49 and ord($word[0]) < 57) or (ord($word[0]) > 65 and ord($word[0]) < 90) or (ord($word[0]) > 97 and ord($word[0]) < 122)) {
                 $dir = "ltr";
             }
+            if (strlen($word) > 1) {
+                if ( (ord($word[1]) > 49 and ord($word[1]) < 57) or (ord($word[1]) > 65 and ord($word[1]) < 90) or (ord($word[1]) > 97 and ord($word[1]) < 122)) {
+                    $dir = "ltr";
+                }
+            }
         }
+
         return $dir;
     }
 
@@ -594,11 +623,17 @@
                 $c_count += 5;
                 $c_t_count += 5;
                 $c_w_count += 5;
+                if ($user_id == $_SESSION['user_id']) {
+                    $_SESSION['user_c_count'] = $_SESSION['user_c_count'] + 5;
+                }
             }
             else if ($op_type == "r") {
                 $c_count -= 5;
                 $c_t_count -= 5;
                 $c_w_count -= 5;
+                if ($user_id == $_SESSION['user_id']) {
+                    $_SESSION['user_c_count'] = $_SESSION['user_c_count'] - 5;
+                }
             }
             
             $update_stmt = "UPDATE users SET user_c_count = '$c_count', user_today_c_count = '$c_t_count',

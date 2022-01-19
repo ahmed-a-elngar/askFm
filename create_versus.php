@@ -1,5 +1,8 @@
 <?php
     session_start();
+
+    $_SESSION['active_tab'] = 'create versus';
+
     if (!isset($_SESSION['user_name'])) {
         # code...
         $_SESSION["destination_"] = "create_versus";
@@ -32,7 +35,7 @@
                 if (mysqli_query($con, $inserting)) {
                     $select = "SELECT MAX(v_id) from $v_table_name";
                     $v_id = mysqli_fetch_array(mysqli_query($con, $select))[0];
-                    notifyFriends($user_id, $v_id);
+                    notifyFollowers($user_id, $v_id);
                     header('location: profile.php');
                 }
                 else {

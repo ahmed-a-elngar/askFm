@@ -1,7 +1,9 @@
 <?php
 
     session_start();
-
+    
+    $_SESSION['active_tab'] = 'sign up';
+    
     $noNav = '';
     $pageTitle = 'Sign up | ASK fm';
     include('init.php');
@@ -18,8 +20,8 @@
         $run_mail_check = mysqli_query($con, $check_mail);
         $check = mysqli_num_rows($run_mail_check);
         if ($check == 1) {
-            echo '<div style="color:white; background-color:red; text-align:center; font-size:16px; padding:12px;">' .
-                'Email already exists, please try again!</div>';
+            echo '<div style="color:white; background-color:#e14; text-align:center; font-size:16px; padding:12px;">' .
+                'Email already exists, please sign in</div>';
         }
         else{
             $user_name =preg_split("/@/", $user_email)[0];
@@ -35,9 +37,11 @@
 
                 $_SESSION['user_name'] = $user_name;
                 $_SESSION['user_id'] = $user_id;
-
+                $_SESSION['user_pic'] = "pics/private.jpeg";
+                $_SESSION['reset_pass'] = "true";
+                $_SESSION['user_c_count'] = 0;
                 #redirect to profile
-                header('location: settings.php');
+                header('location: change_password.php');
             }
             else{
                 echo '<div style="color:white; background-color:#e14; text-align:center; font-size:16px; padding:12px;">' .
@@ -64,7 +68,7 @@
                 <label>E-mail</label><br>
                 <input type="email" placeholder="E-mail" name="email" required>
                 <label>Birthday</label><br>
-                <input type="date" name="DB" required>
+                <input type="date" name="DB" max="2003-01-16" required>
 
                 <p class="grey">
                     By signing up you agree to our 

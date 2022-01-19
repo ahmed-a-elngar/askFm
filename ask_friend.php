@@ -1,5 +1,9 @@
 <?php
     session_start();
+
+    $_SESSION['active_tab'] = 'ask friend';
+
+
     if (!isset($_SESSION['user_name'])) {
         # code...
         header('location: sign in.php');
@@ -23,10 +27,6 @@
         $s_status = htmlentities(mysqli_real_escape_string($con, $_POST['s_status']));
         if (trim($q_content) != "" & trim($target_id) != "") {
             if (sendToTargets($q_content, $target_id, $user_id, $user_name, $s_status)) {
-                $q_table_name = $target_id . '_questions';
-                $select_q_id  = "SELECT MAX(q_id) from $q_table_name";
-                $q_id = mysqli_fetch_array(mysqli_query($con, $select_q_id))[0];
-                notifyMe("q", $q_id, $target_id);
                 header('location: profile.php');
             }
         }
@@ -151,18 +151,13 @@
 <script src="js/jquery-3.3.1.min.js"></script>
 <script>
     // set q sender status whether private | public
-    $(function(){
-        $('#status').click(function(){
-            val = document.getElementById('status').checked;
-            if(val)
-            {
+    $(document).on('click', '#status', function() {
+            val = document.getElementById('s_status').value;
+            if (val == "private") {
+                document.getElementById('s_status').value = "public";
+            } else {
                 document.getElementById('s_status').value = "private";
             }
-            else{
-                document.getElementById('s_status').value = "public";
-            }
-            console.log(val);
-        });
     });
 </script>
 <?php

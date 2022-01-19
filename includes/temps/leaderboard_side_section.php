@@ -36,7 +36,7 @@
 
 <!--see all "link to Leaderboard page"-->
 <p class="see_all narrow">
-    <a href="#">See all</a>
+    <a href="leaderboard.php?">See all</a>
 </p>
 
 <!--market-->

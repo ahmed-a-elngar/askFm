@@ -23,21 +23,22 @@
         if (count($u_id_arr) > 0) {     // if there friends
             
             $v_table_name = $u_id_arr[0] . '_versus';
-            $select_v_stmt = "SELECT  $v_table_name.* , users.user_id, users.user_name, users.user_full_name, users.user_pic FROM $v_table_name
-                              LEFT JOIN users ON users.user_id = '$u_id_arr[0]' ";
+            $select_v_stmt = "SELECT  $v_table_name.* , users.user_id, users.user_name, users.user_full_name, users.user_pic, users.user_mood 
+            FROM $v_table_name LEFT JOIN users ON users.user_id = '$u_id_arr[0]' ";
 
             for($i = 1; $i < count($u_id_arr) ; $i++)
             {
                 // get all friends versus
                 $v_table_name = $u_id_arr[$i] . '_versus';
-                $select_v_stmt .= "UNION SELECT $v_table_name.* , users.user_id, users.user_name, users.user_full_name, users.user_pic FROM $v_table_name
-                                   LEFT JOIN users ON users.user_id = '$u_id_arr[$i]' ";
+                $select_v_stmt .= "UNION SELECT $v_table_name.* , users.user_id, users.user_name, users.user_full_name, users.user_pic, users.user_mood 
+                FROM $v_table_name LEFT JOIN users ON users.user_id = '$u_id_arr[$i]' ";
 
             }
 
             // select friends versus order by time desc & print them
             $select_v_stmt .= "ORDER BY v_date DESC";
             $select_v_query = mysqli_query($con, $select_v_stmt);
+            
             while ($v_info = mysqli_fetch_array($select_v_query)) {
                 $r_u_id = $v_info['user_id'];
 
@@ -47,8 +48,16 @@
                         <div class="friend_section big" style="border: none;">
                             <div class="friend_pics">
                                 <a href="profile.php?user_name_='.$v_info["user_name"].'">
-                                    <img src="'.$v_info["user_pic"].'">
-                                </a>
+                                    <img src="'.$v_info["user_pic"].'">';
+                if($v_info['user_mood'] != null and $v_info['user_mood'] != 0)
+                {
+                    echo'
+                        <div class="user_mood">
+                            <img src="pics/moods/'.$v_info['user_mood'].'.gif">
+                        </div>
+                    ';
+                } 
+                echo'                </a>
                             </div>
                             <div >
                                 <a href="profile.php?user_name_='.$v_info["user_name"].'">
